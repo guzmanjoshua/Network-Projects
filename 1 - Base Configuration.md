@@ -114,12 +114,6 @@ This ensures a clean baseline.
 
 ---
 
-## 📸 Example Console Output
-
-*(Optional: include screenshots or a short log excerpt showing PuTTY session, IP assignment, and interface status)*
-
----
-
 ## 🚀 Skills Demonstrated
 
 - Serial console access & troubleshooting
