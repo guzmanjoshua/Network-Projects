@@ -1,58 +1,53 @@
-# Part 1 – Base Configuration  
+# Part 1 of CHL – Base Configuration  
 
-## 📘 Overview  
-This section covers the **initial setup and configuration** of all Cisco routers and switches in the physical server rack homelab. The goal is to establish console access, verify hardware functionality, and prepare each device for future VLAN, routing, and monitoring configurations.  
+## 📌 Overview  
 
-This phase focused on restoring, standardizing, and documenting baseline configurations across the entire rack to ensure consistency before implementing advanced features in later stages.  
+This project documents the initial **rack bring-up and baseline configuration** of Cisco routers and switches in my home lab.  
+The focus was on **console access, clearing old configs, setting hostnames, configuring interfaces, and saving a clean starting point** for later projects.
 
----
-
-## ⚙️ Objectives  
-- Establish console connectivity for all routers and switches  
-- Perform password recovery and restore default configurations  
-- Configure hostnames, enable secret passwords, and secure privileged modes  
-- Verify hardware, interfaces, and flash storage  
-- Set up basic management and SSH access  
-- Save and back up initial configurations  
+### Hardware Used
+- Cisco **Router 2951 (R2951)**
+- Cisco **Router 2901 (R2901)**
+- Cisco **Router 2911 (R2911)**
+- Cisco **Catalyst 3560** (Layer 3 Core Switch)
+- Cisco **Catalyst 2960** (Layer 2 Access Switches)
 
 ---
 
-## 🧰 Equipment Used  
-- Cisco 2951 Router (Edge)  
-- Cisco 2911 Router (WAN Sim A)  
-- Cisco 2901 Router (WAN Sim B)  
-- Cisco 3560 L3 Switch (Core)  
-- 3 × Cisco 2960 L2 Switches (Access Layer)  
-- USB-to-RJ45 Console Cables  
-- PC with Cisco Console Access (Tera Term / PuTTY)  
+## 🛠️ Problem  
+
+During the initial setup, the **router interfaces were not coming online**:
+
+- Ethernet LEDs were dark on the routers (though active on the switch side).  
+- Old configurations with unknown passwords remained from prior environments.
+
+This required:  
+1. **Console access** via PuTTY and a USB-to-RJ45 console cable.  
+2. **Password recovery and configuration wipe.**  
+3. **Fresh IP assignment** and connectivity verification.
 
 ---
 
-## 🔌 Setup Process  
+## 🔧 Step 1 – Console Access  
 
-### 1. Console Access  
-- Connected each device using USB-to-RJ45 console cables.  
-- Verified access using PuTTY and Tera Term.  
-- Recorded COM-port mappings and confirmed terminal output.  
-
-### 2. Password Recovery & Reset  
-- Entered ROMmon mode on each device using break sequence.  
-- Adjusted `config-register 0x2142` to bypass startup configs.  
-- Recovered enable secrets and reset privileged passwords.  
-
-### 3. Baseline Configuration  
-- Set unique hostnames (e.g., `R2951-Core`, `SW-3560-L3`).  
-- Configured domain names and SSH keys.  
-- Enabled logging synchronous and exec-timeout controls on consoles.  
-- Assigned IP addresses to management interfaces for later connectivity.  
-
-### 4. Verification & Backups  
-- Verified interface status with `show ip int brief`.  
-- Saved running configs to startup configs (`copy run start`).  
-- Exported all base configs via TFTP for GitHub archiving.  
+1. Identify the COM port under **Device Manager → Ports (COM & LPT)**.  
+2. Open **PuTTY** → *Connection type:* Serial → *Serial line:* `COM3` → click **Open**.  
+3. When prompted with the initial setup dialog, select **No**.  
 
 ---
 
-## 📋 Sample Outputs  
+## 🔧 Step 2 – Basic Router Setup  
 
-**Show Version:**  
+```bash
+enable
+configure terminal
+hostname R2951
+
+# Configure G0/0
+interface g0/0
+ip address 10.0.0.1 255.255.255.252
+no shutdown
+exit
+
+# Save configuration
+write memory
