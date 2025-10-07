@@ -1,4 +1,4 @@
-# Part 1 of CHL – Base Configuration
+# Part 1 of CSRHL – Base Configuration
 
 ## 📌 Overview
 
